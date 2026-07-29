@@ -4,17 +4,19 @@ from pages.home_page import HomePage
 
 @pytest.fixture(autouse=True)
 def home(page: Page) -> HomePage:
+    """Фикстура стартовая страница"""
     return HomePage(page)
 
 @pytest.fixture(autouse=True)
-def open_litres(page: Page):
-    page.goto("https://www.metatrader.com/")
+def open_metatrader(page: Page):
+    """Фикстура для подготовки окружения теста"""
+    page.goto("https://www.metatrader.com/en")
     yield page
 
-@pytest.fixture(scope="session")
-def browser_context_args(browser_context_args):
-    """Фикстура для браузера, редирект на страницу US"""
-    return {
-        **browser_context_args,
-        "locale": "US",
-    }
+
+
+@pytest.fixture()
+def open_nvda_statement(page: Page):
+    """Фикстура для подготовки окружения теста /nvda/statement"""
+    page.goto("https://www.metatrader.com/en/symbols/nasdaq/nvda/statement")
+    yield page
