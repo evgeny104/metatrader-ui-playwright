@@ -1,5 +1,6 @@
 from playwright.sync_api import Page, expect
 from data.data_tests import EXPECTED_YEARS
+import re
 import pytest
 
 
@@ -11,7 +12,7 @@ def test_search_nvda(page: Page):
     searchbox.click()
     page.keyboard.type("nvda", delay=150)
 
-    first_suggestion = page.get_by_text("NVDA (NASDAQ): Nvidia Corp", exact=True).first
+    first_suggestion = page.locator("div.text", has_text=re.compile(r"^NVDA \(NASDAQ\): Nvidia Corp$")).first
     expect(first_suggestion).to_be_visible(timeout=1000)
     first_suggestion.click()
 
