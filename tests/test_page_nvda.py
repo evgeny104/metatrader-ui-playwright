@@ -2,22 +2,25 @@ from playwright.sync_api import Page, expect
 from data.data_tests import EXPECTED_YEARS
 import pytest
 
+
 def test_search_nvda(page: Page):
     """
-    Проверяет поиск NVDA через строку поиска на сайте MetaTrader:
-    - в выпадающем списке подсказок появляется пункт с NVIDIA неточной формулировке
-    - клик по подсказке ведет на страницу актива /symbols/nasdaq/nvda
+    Проверяет поиск через строку поиска на сайте MetaTrader - проверка активного dropdown
     """
-    page.get_by_role("searchbox").fill("NVDA")
-    expect(page.locator('a[href$="/symbols/nasdaq/nvda"]').first).to_contain_text("Nvidia", ignore_case=True)
+    searchbox = page.get_by_role("searchbox")
+    searchbox.click()
+    page.keyboard.type("nvda", delay=150)
 
-    # first in search
-    page.locator('a[href$="/symbols/nasdaq/nvda"]').first.click()
+    first_suggestion = page.get_by_text("NVDA (NASDAQ): Nvidia Corp", exact=True).first
+    expect(first_suggestion).to_be_visible(timeout=1000)
+    first_suggestion.click()
+
+
     expect(page).to_have_url("https://www.metatrader.com/en/symbols/nasdaq/nvda")
 
 def test_search_homepage(page: Page):
     """
-    Проверяет поиск через строку поиска на сайте MetaTrader:
+    Проверяет поиск через строку поиска на сайте MetaTrader - переходим на страничку с результатом
     """
     expect(page).to_have_url("https://www.metatrader.com/")
 
@@ -39,15 +42,3 @@ def test_year_columns_present(page: Page, open_nvda_statement):
 
     # TTM in end
     expect(header.locator("span.cell.last")).to_have_text("TTM")
-
-
-
-
-
-
-
-
-
-
-
-
