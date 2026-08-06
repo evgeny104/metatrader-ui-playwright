@@ -1,8 +1,6 @@
 from playwright.sync_api import Page, expect
-from data.data_tests import EXPECTED_YEARS
+from data.nvda.statement_years import EXPECTED_YEARS
 import re
-import pytest
-
 
 def test_search_nvda(page: Page):
     """
@@ -10,12 +8,11 @@ def test_search_nvda(page: Page):
     """
     searchbox = page.get_by_role("searchbox")
     searchbox.click()
-    page.keyboard.type("nvda", delay=150)
+    page.keyboard.type("NVDA")
 
     first_suggestion = page.locator("div.text", has_text=re.compile(r"^NVDA \(NASDAQ\): Nvidia Corp$")).first
     expect(first_suggestion).to_be_visible(timeout=1000)
     first_suggestion.click()
-
 
     expect(page).to_have_url("https://www.metatrader.com/en/symbols/nasdaq/nvda")
 
