@@ -1,20 +1,15 @@
 import pytest
 from playwright.sync_api import Page
-from pages.home_page import HomePage
-
+from pages.home_nvda_page import HomePage
 
 @pytest.fixture(autouse=True)
 def open_metatrader(page: Page):
     page.goto("https://www.metatrader.com/")
     yield page
 
-
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def home(page: Page) -> HomePage:
     return HomePage(page)
-
-
-
 
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
