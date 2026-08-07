@@ -1,6 +1,6 @@
 import pytest
 from playwright.sync_api import Page
-from pages.home_nvda_page import HomePage
+from pages.nvda.home_nvda_page import HomePage
 
 @pytest.fixture(autouse=True)
 def open_metatrader(page: Page):
