@@ -1,6 +1,8 @@
 import pytest
 from playwright.sync_api import Page
-from pages.nvda.home_nvda_page import HomePage
+from pages.nvda.home_search_page import HomePage
+from pages.nvda.nvda_results_page import SearchResultsPage
+
 
 @pytest.fixture(autouse=True)
 def open_metatrader(page: Page):
@@ -27,5 +29,9 @@ def open_nvda_statement(page: Page):
 def browser_type_launch_args(browser_type_launch_args):
     return {
         **browser_type_launch_args,
-        "slow_mo": 1000,  # замедление как --slowmo 1000mc
+        "slow_mo": 3000,  # замедление как --slowmo 1000mc
     }
+
+@pytest.fixture
+def results(page: Page) -> SearchResultsPage:
+    return SearchResultsPage(page)

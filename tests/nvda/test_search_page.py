@@ -1,23 +1,21 @@
-from playwright.sync_api import expect
-import re
-
-
-def test_search_nvda(page, home):
+def test_search_nvda(page, home, results):
     """
-    Строка поиска на сайте MetaTrader - проверка активного dropdown
+    Клик по первой ссылки в -> dropdown -> page NVDA
     """
-    query = "nVda"
+    query = "NVDA"
     home.search(query)
+    results.should_be_opened()
 
-    expect(page).to_have_url("https://www.metatrader.com/en/symbols/nasdaq/nvda")
-
-
-def test_search_homepage(page, home):
+def test_search_homepage(page, home, results):
     """
-    Проверяет поиск ввод "Enter" - переход на страницу результатов
+    Строка поиск ввод "Enter" - переход на страницу результатов
     """
-    query = "nvda"
+    query = "NVIDIA"
     home.search(query, True)
+    results.should_be_opened(True)
 
-    expect(page.get_by_text(re.compile("NVIDIA", re.IGNORECASE)).first).to_be_visible()
+
+
+
+
 
