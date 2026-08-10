@@ -1,14 +1,14 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
+from pages.nvda.nvda_statement_page import NvdaStatementPage
 from data.nvda.statement_years import EXPECTED_YEARS
 
 
-def test_year_columns_present(page: Page, open_nvda_statement):
-    header = page.locator("span.row.header")
+def test_statement_page_opens(nvda_statement: NvdaStatementPage):
+    nvda_statement.should_be_opened()
 
-    # data-index="1" -> 2021, ..., data-index="5" -> 2025
-    for i, year in enumerate(EXPECTED_YEARS, start=0):
-        cell = header.locator(f'span.cell[data-index="{i}"]')
-        expect(cell).to_have_text(year)
 
-    # TTM in end
-    expect(header.locator("span.cell.last")).to_have_text("TTM")
+def test_year_columns_present(nvda_statement: NvdaStatementPage):
+    for i, year in enumerate(EXPECTED_YEARS):
+        expect(nvda_statement.year_cell(i)).to_have_text(year)
+
+    expect(nvda_statement.ttm_cell).to_have_text("TTM")
