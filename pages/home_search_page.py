@@ -11,7 +11,7 @@ class HomePage(BasePage):
 
     @property
     def first_dropdown_item(self) -> Locator:
-        return self.page.locator("div.list a.item").first
+        return self.page.locator("header form div.list a.item").first
 
     @property
     def first_result(self) -> Locator:
@@ -19,15 +19,16 @@ class HomePage(BasePage):
 
     # Actions
 
-    def search(self, query: str, submit_with_enter: bool = False ) -> None:
-        """нажимает на кнопку "Enter" -else клик по первой ссылки"""
+    def search(self, query: str, submit_with_enter: bool = False) -> None:
         self.search_input.fill(query)
 
         if submit_with_enter:
             self.page.keyboard.press("Enter")
-
         else:
-            expect(self.first_dropdown_item).to_be_visible()
+            # ждём пока дропдаун покажет результаты по запросу (не trending статьи)
+            expect(
+                self.page.locator("header form div.list a.item").filter(has_text=query.upper()).first
+            ).to_be_visible(timeout=3000)
             self.first_dropdown_item.click()
 
     def open_first_result(self) -> None:

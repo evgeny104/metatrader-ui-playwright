@@ -14,8 +14,8 @@ def test_search_opens_with_slash_key(home: HomePage):
 
 
 def test_search_dropdown_appears(home: HomePage):
-    """При вводе тикера появляется выпадающий список"""
-    home.search_input.fill("NVDA")
+    """При вводе тикера появляется выпадающий список - дропдаун"""
+    home.search_input.fill("alp")
     expect(home.first_dropdown_item).to_be_visible()
 
 
