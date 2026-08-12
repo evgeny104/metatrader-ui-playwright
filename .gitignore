@@ -53,6 +53,9 @@ dist/
 build/
 *.egg-info/
 
+# File
+CLAUDE.md
+
 # Allure / coverage reports (generated)
 allure-results/
 allure-report/
