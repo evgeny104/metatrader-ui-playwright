@@ -1,5 +1,5 @@
 from playwright.sync_api import expect
-from pages.home_search_page import HomePage
+from pages.search import HomePage
 
 
 def test_search_input_is_visible(home: HomePage):
