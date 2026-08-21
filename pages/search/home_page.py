@@ -1,6 +1,8 @@
+import re
+import allure
 from playwright.sync_api import Locator, expect
 from pages.base_page import BasePage
-import re
+
 
 class HomePage(BasePage):
 
@@ -8,32 +10,37 @@ class HomePage(BasePage):
 
     @property
     def search_input(self) -> Locator:
-        return self.page.get_by_role("searchbox")  # достает поле ввода поиска в хедере
+        return self.page.get_by_role("searchbox")
 
     @property
     def first_dropdown_item(self) -> Locator:
-        return self.page.locator("header form div.list a.item").first  # достает первый элемент дропдауна
+        return self.page.locator("header form div.list a.item").first
 
     @property
     def first_result(self) -> Locator:
-        return self.page.locator("div.result-content h2 a").first  # достает первую ссылку на странице по поиску
+        return self.page.locator("div.result-content h2 a").first
 
     # Actions
 
+    @allure.step("Ищем Компанию: {query}")
     def search(self, query: str, submit_with_enter: bool = False) -> None:
-        self.search_input.fill(query)
+        with allure.step(f"Вводим '{query}' в строку поиска"):
+            self.search_input.fill(query)
 
         if submit_with_enter:
-            self.page.keyboard.press("Enter")  # переходит на /en/search?keyword=QUERY
+            with allure.step("Отправляем поиск клавишей Enter"):
+                self.page.keyboard.press("Enter")
         else:
-            # ждём пока дропдаун покажет результаты по запросу (не trending статьи)
-            expect(
-                self.page.locator("header form div.list a.item").filter(has_text=query.upper()).first
-            ).to_be_visible(timeout=3000)
-            self.first_dropdown_item.click()  # кликает по нужному символу в дропдауне
+            with allure.step("Ждём результаты и выбираем из дропдауна"):
+                expect(
+                    self.page.locator("header form div.list a.item").filter(has_text=query.upper()).first
+                ).to_be_visible(timeout=10000)
+                self.first_dropdown_item.click()
 
-    def open_first_result(self, query: str | None = None) -> None:
-        self.first_result.evaluate("el => el.removeAttribute('target')")  # убирает target="_blank" чтобы открыть в том же окне
-        self.first_result.click() # кликает на первую ссылку на страничке Поиск
-        if query:
-            expect(self.page).to_have_title(re.compile(query, re.IGNORECASE))  # ← проверяет что заголовок страницы содержит тикер
+    @allure.step("Открываем первый результат поиска: {query}")
+    def open_first_result(self, query: str) -> None:
+        with allure.step("Открываем результат в текущей вкладке"):
+            self.first_result.evaluate("el => el.removeAttribute('target')")
+            self.first_result.click()
+        with allure.step(f"Проверяем заголовок содержит '{query}'"):
+            expect(self.page).to_have_title(re.compile(query, re.IGNORECASE))

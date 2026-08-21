@@ -59,3 +59,5 @@ CLAUDE.md
 # Allure / coverage reports (generated)
 allure-results/
 allure-report/
+reports/
+screenshots/
